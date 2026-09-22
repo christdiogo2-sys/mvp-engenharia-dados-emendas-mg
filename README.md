@@ -21,7 +21,7 @@ Durante a carga para a criação da tabela base (`bronze_emendas_raw`), o delimi
 <img width="1645" height="536" alt="image" src="https://github.com/user-attachments/assets/d8434440-5dbf-4126-8921-9f7f528e8220" />
 <img width="1385" height="441" alt="image" src="https://github.com/user-attachments/assets/824185d3-3a07-46df-90d2-cd26eea68009" />
 
-**Referência do script:** [Inserir link do Github para o notebook SQL]
+**Referência do script:** https://github.com/christdiogo2-sys/mvp-engenharia-dados-emendas-mg/blob/main/Pipeline_Emendas_MG.sql
 
 
 ## Modelagem e Catálogo de Dados (Etapa 4.3)
@@ -55,8 +55,6 @@ O processo de ETL (Extract, Transform, Load) foi orquestrado em um único Notebo
 
 <img width="1335" height="603" alt="create table silver" src="https://github.com/user-attachments/assets/0193ddae-5bd8-44aa-8f7c-e170b0d9747c" />
 <img width="1331" height="465" alt="create table fato" src="https://github.com/user-attachments/assets/6e0295e7-0d52-4404-80ef-4ff95b53f222" />
-
-**Referência do script:** [Inserir link do Github para o notebook SQL]
 
 
 ## Qualidade de Dados (Etapa 4.5)
