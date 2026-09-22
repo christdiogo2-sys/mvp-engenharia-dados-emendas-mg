@@ -21,7 +21,7 @@ Durante a carga para a criação da tabela base (`bronze_emendas_raw`), o delimi
 <img width="1645" height="536" alt="image" src="https://github.com/user-attachments/assets/d8434440-5dbf-4126-8921-9f7f528e8220" />
 <img width="1385" height="441" alt="image" src="https://github.com/user-attachments/assets/824185d3-3a07-46df-90d2-cd26eea68009" />
 
-**Referência do script:** https://github.com/christdiogo2-sys/mvp-engenharia-dados-emendas-mg/blob/main/Pipeline_Emendas_MG.sql
+**Referência do script:** https://github.com/christdiogo2-sys/mvp-engenharia-dados-emendas-mg/blob/main/Pipeline_Emendas_MG-2.sql
 
 
 ## Modelagem e Catálogo de Dados (Etapa 4.3)
