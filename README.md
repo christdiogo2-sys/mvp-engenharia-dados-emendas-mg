@@ -9,7 +9,7 @@ Os dados brutos foram extraídos do Portal da Transparência do Governo Federal 
 As perguntas de negócio que guiam o desenvolvimento deste pipeline são:
 
 1. Quais são os 5 municípios mineiros que receberam o maior volume financeiro de emendas pagas?
-2. Qual autor apresenta a maior proporção entre valor empenhado e valor pago para o estado de Minas Gerais?
+2. Qual autor apresenta o maior volume pago em emendas e qual a proporção entre o valor empenhado e valor pago para o estado de Minas Gerais?
 3. Existe uma concentração de repasses financeiros em áreas de atuação específicas (como Saúde ou Educação)?
 
 ## Carga dos Dados (Etapa 4.2)
