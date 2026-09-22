@@ -2,14 +2,14 @@
 
 ## Contexto de Negócios e Perguntas (Etapa 2 e 4.1)
 
-O objetivo deste projeto é analisar a distribuição e a execução financeira das Emendas Parlamentares destinadas ao estado de Minas Gerais. O pipeline de dados foi construído para transformar registros governamentais brutos em insights estruturados, permitindo entender como os recursos públicos são alocados e executados.
+O objetivo deste projeto é analisar a distribuição e a execução financeira das Emendas Parlamentares destinadas ao estado de Minas Gerais no ano de 2025. O pipeline de dados foi construído para transformar registros governamentais brutos em insights estruturados, permitindo entender como os recursos públicos foram alocados e executados.
 
 Os dados brutos foram extraídos do Portal da Transparência do Governo Federal (Visão Geral de Emendas Parlamentares). Trata-se de uma base de dados governamental regida pela licença de Dados Abertos, permitindo o livre uso, cruzamento e análise para fins acadêmicos e informativos.
 
 As perguntas de negócio que guiam o desenvolvimento deste pipeline são:
 
 1. Quais são os 5 municípios mineiros que receberam o maior volume financeiro de emendas pagas?
-2. Qual partido político apresenta a maior proporção entre valor empenhado e valor pago para o estado de Minas Gerais?
+2. Qual autor apresenta a maior proporção entre valor empenhado e valor pago para o estado de Minas Gerais?
 3. Existe uma concentração de repasses financeiros em áreas de atuação específicas (como Saúde ou Educação)?
 
 ## Carga dos Dados (Etapa 4.2)
@@ -18,8 +18,11 @@ A ingestão inicial ocorreu de forma manual, dadas as limitações do escopo do 
 
 Durante a carga para a criação da tabela base (`bronze_emendas_raw`), o delimitador de colunas foi configurado para ponto e vírgula (`;`) e a primeira linha foi definida como cabeçalho para garantir a correta identificação dos metadados. O armazenamento subjacente utiliza o formato Delta Lake nativo da plataforma.
 
-*[Inserir Screenshot: Tabela bronze_emendas_raw no Catalog do Databricks]*
+<img width="1645" height="536" alt="image" src="https://github.com/user-attachments/assets/d8434440-5dbf-4126-8921-9f7f528e8220" />
+<img width="1385" height="441" alt="image" src="https://github.com/user-attachments/assets/824185d3-3a07-46df-90d2-cd26eea68009" />
+
 **Referência do script:** [Inserir link do Github para o notebook SQL]
+
 
 ## Modelagem e Catálogo de Dados (Etapa 4.3)
 
@@ -37,7 +40,10 @@ Os dados foram modelados seguindo o modelo dimensional *Star Schema* (Esquema Es
 | `dim_parlamentar` | `partido` | String | Siglas partidárias válidas | Partido do autor. Origem: `Sigla_Partido`. |
 | `dim_area_atuacao` | `area_atuacao` | String | Saúde, Educação, etc. | Setor de destino do recurso. Origem: `Funcao`. |
 
-*[Inserir Screenshot: Esquema visual ou listagem de tabelas do catálogo no Databricks]*
+<img width="314" height="510" alt="image" src="https://github.com/user-attachments/assets/995041d6-70f8-43a0-967e-b2ef7ee33a22" />
+<img width="1349" height="438" alt="image" src="https://github.com/user-attachments/assets/e5141cc0-220f-4687-94d0-83100b19ff52" />
+<img width="1327" height="423" alt="image" src="https://github.com/user-attachments/assets/449d0261-c4ec-40c1-a244-0647dac58dbc" />
+
 
 ## Pipeline de Dados (Etapa 4.4)
 
@@ -47,8 +53,11 @@ O processo de ETL (Extract, Transform, Load) foi orquestrado em um único Notebo
 * **Camada Silver:** Foi criada a tabela `silver_emendas_mg`. Nesta etapa, aplicou-se um filtro espacial restrito (`WHERE UF = 'MG'`). As colunas financeiras, originalmente strings com vírgulas, sofreram transformações de substituição de caracteres (`REPLACE`) e conversão de tipos (`CAST AS DECIMAL`) para permitir cálculos matemáticos.
 * **Camada Gold:** A tabela Silver foi desnormalizada e dividida, gerando a tabela fato (`fato_emendas_mg`) e as dimensões descritivas (`dim_parlamentar`, `dim_area_atuacao`).
 
-*[Inserir Screenshot: Células do Notebook rodando os comandos de CREATE TABLE]*
+<img width="1335" height="603" alt="create table silver" src="https://github.com/user-attachments/assets/0193ddae-5bd8-44aa-8f7c-e170b0d9747c" />
+<img width="1331" height="465" alt="create table fato" src="https://github.com/user-attachments/assets/6e0295e7-0d52-4404-80ef-4ff95b53f222" />
+
 **Referência do script:** [Inserir link do Github para o notebook SQL]
+
 
 ## Qualidade de Dados (Etapa 4.5)
 
@@ -58,25 +67,27 @@ Antes da modelagem final, a qualidade dos atributos passou por verificações e 
 * **Consistência:** Os campos de valores financeiros (`Valor_Empenhado`, `Valor_Pago`) apresentavam formatação em string com padrão brasileiro (vírgula para decimais). A tentativa de soma sem tratamento geraria erros. A consistência foi garantida transformando as vírgulas em pontos e realizando o *casting* para o tipo `DECIMAL(15,2)`.
 * **Acurácia e Outliers:** Realizou-se uma verificação de valores negativos nos campos de repasse. Nenhuma anomalia de sinal negativo foi encontrada na base filtrada.
 
+
 ## Análise de Dados (Etapa 4.5)
 
 Com os dados higienizados e modelados na camada Gold, as seguintes respostas foram extraídas via consultas SQL:
 
 **1. Municípios com maior volume financeiro pago:**
-As consultas evidenciaram que os municípios de [INSERIR CIDADE 1], [INSERIR CIDADE 2] e [INSERIR CIDADE 3] lideram o recebimento de repasses no estado. Isso sugere uma correlação entre o peso eleitoral e populacional dessas regiões e a destinação de emendas.
-*[Inserir Screenshot: Resultado do SELECT Top 5 Municípios]*
+As consultas evidenciaram que os municípios de Muriaé, Uberlândia, Alfenas, Serra dos Aimorés e Montes Claros lideraram, respectivamente, o recebimento de repasses no estado. Um futuro trabalho interessante seria relacionar a estes dados o número de habitantes e votos válidos em cada município.
+<img width="1379" height="581" alt="top 5 cidades" src="https://github.com/user-attachments/assets/f32d6f9e-57b9-42a6-a9ff-a4620c018fc7" />
 
-**2. Proporção Empenhado vs. Pago por Partido:**
-A análise de execução orçamentária revelou que o partido [INSERIR PARTIDO] obteve a maior taxa de conversão entre o valor que foi prometido (empenhado) e o que de fato chegou ao cofre (pago), atingindo uma proporção de [INSERIR PORCENTAGEM]%.
-*[Inserir Screenshot: Resultado do SELECT calculando a proporção por partido]*
+**2. Maior volume liberado em emendas (R$) e proporção Empenhado vs. Pago:**
+A análise de execução orçamentária revelou que o deputado Weliton Prado obteve o maior valor em emendas que de fato chegou ao cofre (pago), atingindo uma taxa de conversão de 99,5% em relação ao valor empenhado.
+<img width="1339" height="585" alt="top deputado" src="https://github.com/user-attachments/assets/8b4fec1b-37f4-4c3d-af14-6ef7ac632a56" />
 
 **3. Concentração por Área de Atuação:**
-A área de [INSERIR ÁREA, ex: Saúde] domina amplamente os repasses, representando [INSERIR PORCENTAGEM]% do volume total pago para Minas Gerais, refletindo a prioridade dos parlamentares em direcionar recursos para o custeio da atenção básica e hospitalar local.
-*[Inserir Screenshot: Resultado do SELECT agrupado por função/área]*
+A área de Saúde domina amplamente os repasses, representando 70,75% do volume total pago para Minas Gerais, refletindo a prioridade dos parlamentares em direcionar recursos para o custeio da atenção básica e hospitalar local. Um dado interessante é que apenas pouco mais de 1% de todo o recurso liberado foi direcionado à área da Educação.
+<img width="1328" height="538" alt="top 5 areas" src="https://github.com/user-attachments/assets/c4f7b35c-0022-4597-83a0-90ad67cac52b" />
+
 
 ## Autoavaliação
 
-O objetivo inicial do MVP foi concluído com êxito. Foi possível construir um pipeline funcional que partiu de uma necessidade de negócio clara (entender o fluxo das emendas parlamentares em MG) até a entrega de dados limpos e modelados em um ambiente de nuvem. A arquitetura Lakehouse do Databricks provou ser altamente eficiente, permitindo executar rotinas de *Data Warehousing* no mesmo local da ingestão bruta, tudo gerido por linguagem SQL.
+O objetivo inicial do MVP foi concluído com êxito. Foi possível construir um pipeline funcional que partiu de uma necessidade de negócio clara (entender o fluxo das emendas parlamentares em MG no ano de 2025) até a entrega de dados limpos e modelados em um ambiente de nuvem. A arquitetura Lakehouse do Databricks provou ser altamente eficiente, permitindo executar rotinas de *Data Warehousing* no mesmo local da ingestão bruta, tudo gerido por linguagem SQL.
 
 A principal dificuldade técnica encontrada residiu na etapa de ETL da camada Silver, especificamente na identificação da melhor abordagem para tratar dados nulos e limpar strings monetárias oriundas do formato padrão brasileiro governamental.
 
